@@ -1,22 +1,118 @@
 {% extends "base.html" %}
 {% block title %} Monkeybar - {{ phrase }} {% endblock %}
 
-{% block body%}
+{% block head %}
+    <!-- Sigma core -->
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/sigma.core.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/conrad.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/utils/sigma.utils.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/utils/sigma.polyfills.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/sigma.settings.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/classes/sigma.classes.dispatcher.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/classes/sigma.classes.configurable.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/classes/sigma.classes.graph.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/classes/sigma.classes.camera.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/classes/sigma.classes.quad.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/classes/sigma.classes.edgequad.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/captors/sigma.captors.mouse.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/captors/sigma.captors.touch.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/sigma.renderers.canvas.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/sigma.renderers.webgl.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/sigma.renderers.svg.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/sigma.renderers.def.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/canvas/sigma.canvas.labels.def.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/canvas/sigma.canvas.hovers.def.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/canvas/sigma.canvas.nodes.def.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/canvas/sigma.canvas.edges.def.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/canvas/sigma.canvas.edges.curve.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/canvas/sigma.canvas.edges.arrow.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/canvas/sigma.canvas.edges.curvedArrow.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/canvas/sigma.canvas.edgehovers.def.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/canvas/sigma.canvas.edgehovers.curve.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/canvas/sigma.canvas.edgehovers.arrow.js"></script>
+    <script
+        src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/canvas/sigma.canvas.edgehovers.curvedArrow.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/renderers/canvas/sigma.canvas.extremities.def.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/middlewares/sigma.middlewares.rescale.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/middlewares/sigma.middlewares.copy.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/misc/sigma.misc.animation.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/misc/sigma.misc.bindEvents.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/misc/sigma.misc.bindDOMEvents.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/misc/sigma.misc.drawHovers.js"></script>
+    <style>
+        #sigma-container {
+            width: 100%;
+            height: 100%;
+            background-color: #242424;
+            color: #fff !important;
+            position: absolute;
+        }
+
+        #sigma-mouse {
+            background: transparent;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
     <div class="container" id="wrapper">
         <div id="content">
             <h1>Monkeybar Graph</h1>
             <p>The phrase you searched for was "{{ phrase }}".</p>
             <p>Here is a table that shows related words.</p>
-            <ol id="list"></ol>
         </div>
     </div>
+    <div id="sigma-container"></div>
     <script type=text/javascript>
-        $(function() {
-            let words = JSON.parse('{{ words }}'.replaceAll('&#34;', '"'));
-            let list = $('#list');
-            for(let word of words) {
-                list.append($(`<li>${word[0]} - ${word[1]}</li>`));
+        let s = new sigma(
+            {
+                renderer: {
+                    container: document.getElementById('sigma-container'),
+                    type: 'canvas'
+                },
+                settings: {
+                    labelColor: 'node',
+                    minEdgeSize: 0.1,
+                    maxEdgeSize: 2,
+                    minNodeSize: 5,
+                    maxNodeSize: 5,
+                }
             }
-        });
+        );
+
+        let g = JSON.parse('{{ graph }}'.replaceAll('&#34;', '"'));
+        let gNodes = g[0];
+        let gEdges = g[1];
+
+        let graph = {
+            nodes: [],
+            edges: []
+        }
+
+        // nodes
+        for(let node of gNodes) {
+            graph.nodes.push({
+                id: node,
+                label: node,
+                x: Math.random(),
+                y: Math.random(),
+                size: 3
+            });
+        }
+
+        // edges
+        for(let edge of gEdges) {
+            graph.edges.push({
+                id: edge[0] + ':' + edge[1],
+                source: edge[0],
+                target: edge[1],
+                color: '#545454',
+                type: 'line'
+            });
+        }
+
+        s.graph.read(graph);
+        s.refresh();
     </script>
-{% endblock%}
+
+{% endblock %}
