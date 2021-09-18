@@ -1,16 +1,22 @@
 {% extends "base.html" %}
-{% block title %} Monkey - {{ temp_1 }} {% endblock %}
+{% block title %} Monkeybar - {{ phrase }} {% endblock %}
 
 {% block body%}
-    <div id="wrapper">
+    <div class="container" id="wrapper">
         <div id="content">
-            <p>The phrase you searched for was "{{ temp_1 }}".</p>
-            <p>Here is a word graph that shows related words.</p>
+            <h1>Monkeybar Graph</h1>
+            <p>The phrase you searched for was "{{ phrase }}".</p>
+            <p>Here is a table that shows related words.</p>
+            <ol id="list"></ol>
         </div>
     </div>
     <script type=text/javascript>
         $(function() {
-            // do stuff here
+            let words = JSON.parse('{{ words }}'.replaceAll('&#34;', '"'));
+            let list = $('#list');
+            for(let word of words) {
+                list.append($(`<li>${word[0]} - ${word[1]}</li>`));
+            }
         });
     </script>
 {% endblock%}
