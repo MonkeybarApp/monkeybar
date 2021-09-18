@@ -27,6 +27,6 @@ def get_wordlist_for_url(url):
         content = re.sub(r'[^a-z]', ' ', content)
 
         wordlist = [i for i in content.split(' ') if len(i) > 1 and i not in common_words]
-        return list(set(filter(('').__ne__, wordlist)))
+        return list(filter(('').__ne__, wordlist))
     else:
         return []

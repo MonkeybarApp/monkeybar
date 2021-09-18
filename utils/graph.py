@@ -35,12 +35,10 @@ class Graph:
         if node_hash not in self.connections:
             return []
 
-        return [self.nodes[i] for i in self.connections[node_hash] if self.edge_weight(node, self.nodes[i]) > min_weight]
+        return [(self.nodes[i], self.edge_weight(node, self.nodes[i])) for i in self.connections[node_hash] if self.edge_weight(node, self.nodes[i]) > min_weight]
 
     def edge_weight(self, a, b):
         edge_hash = self._hash_edge(a, b)
-        if edge_hash not in self.edges:
-            print((a, b))
         return self.edges[edge_hash]
 
     def connect(self, a, b, weight):
@@ -65,10 +63,11 @@ def get_graph_for_phrase(phrase):
         wordlist = get_wordlist_for_url(url)
 
         for i in range(0, len(wordlist)):
-            for j in range(i+1, len(wordlist)):
-                graph.connect(wordlist[i], wordlist[j], 1)
+            for j in range(i+1, min(i+31, len(wordlist))):
+                if wordlist[i] != wordlist[j]:
+                    graph.connect(wordlist[i], wordlist[j], 1/len(wordlist))
 
-    threshold = num_urls // 2.2
+    threshold = 0
     queue = phrase.lower().split(' ')
     visited = set()
     edges = set()
@@ -80,15 +79,18 @@ def get_graph_for_phrase(phrase):
         visited.add(current_node)
 
         node_edges = graph.node_edges(current_node, threshold)
+        node_edges.sort(key=lambda x:x[1])
+        node_edges.reverse()
+
+        if len(node_edges) > 15:
+            node_edges = node_edges[:5]
 
         for i in node_edges:
-            edge_weight = graph.edge_weight(current_node, i) 
-
             a = copy.copy(current_node)
-            b = copy.copy(i)
+            b = copy.copy(i[0])
             if a > b: a, b = b, a
-            edges.add((a, b, edge_weight))
+            edges.add((a, b, i[1]))
 
-            queue.append(i)
+            queue.append(i[0])
 
     return visited, edges
