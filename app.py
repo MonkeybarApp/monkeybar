@@ -13,11 +13,7 @@ def index():
 def find_links(query_phrase):
     # hardcode for now
     return [
-        'https://www.innersloth.com/games/among-us/',
-        'https://store.steampowered.com/app/945360/Among_Us/',
-        'https://en.wikipedia.org/wiki/Among_Us',
-        'https://www.epicgames.com/store/en-US/p/among-us',
-        'https://www.nintendo.com/games/detail/among-us-switch/'
+        'https://en.wikipedia.org/wiki/World_War_I'
     ]
 
 def extract_text(link):
@@ -26,19 +22,27 @@ def extract_text(link):
     soup = BeautifulSoup(req.content, 'html.parser')
     text = ''
     for p in soup.find_all('p'):
-        text += '\n' + p.get_text()
+        cur_text = p.get_text()
+        if len(cur_text) < 50:
+            continue
+        ratio = len(cur_text) / len(str(p))
+        if ratio <= 0.5:
+            continue
+        text += '\n' + cur_text
     return text
 
 def frequency_analysis(phrase, text):
-    phrase = set(phrase.lower().split())
+    phrase = phrase.strip().lower()
     words = text.split()
     frequency = dict()
-    stop_list = ['of', 'by', 'then', 'from', 'i', 'to', 'him', 'he', 'she', 'her', 'their', 'them', 'our', 'the', 'and', 'retrieved', 'in', 'a', 'are', 'as', 'is', 'or', 'for', 'on', 'with', 'this', 'isbn', 'have', 'that', 'such', 'also', 'other', 'be', 'some', 'they', 'which', 'not', 'more', 'all', 'but', 'most', 'britannica', 'at', 'it', 'an', 'out', 'your', 'article', 'make', 'including', 'generally', 'may', 'its', 'many', 'info', 'than', 'was', 'has', 'called', 'well', 'often', 'sometimes', 'one', 'those', 'do', 'since', 'belong', 'contains', 'between', 'either', 'while', 'being', 'after', 'only', 'name', 'both', 'were', 'had', 'you', 'if', 'would', 'been', 'any', 'when', 'can', 'us', 'during'] # to be continued
+    stop_list = ['of', 'by', 'then', 'from', 'i', 'to', 'him', 'he', 'she', 'her', 'their', 'them', 'our', 'the', 'and', 'retrieved', 'in', 'a', 'are', 'as', 'is', 'or', 'for', 'on', 'with', 'this', 'isbn', 'have', 'that', 'such', 'also', 'other', 'be', 'some', 'they', 'which', 'not', 'more', 'all', 'but', 'most', 'britannica', 'at', 'it', 'an', 'out', 'your', 'article', 'make', 'including', 'generally', 'may', 'its', 'many', 'info', 'than', 'was', 'has', 'called', 'well', 'often', 'sometimes', 'one', 'those', 'do', 'since', 'belong', 'contains', 'between', 'either', 'while', 'being', 'after', 'only', 'name', 'both', 'were', 'had', 'you', 'if', 'would', 'been', 'any', 'when', 'can', 'us', 'during', 'will', 'there', 'around', 'even', 'into', 'so', 'first', 'just', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'yes', 'no', 'use', 'used', 'these', 'against', 'became', 'who'] # to be continued
     for word in words:
         if not word.isalpha():
             continue
+        if phrase in word:
+            continue
         word = word.lower()
-        if not word in stop_list or word in phrase:
+        if not word in stop_list:
             frequency[word] = 1 + frequency.get(word, 0)
     freq_list = []
     for key, value in sorted(frequency.items(), key=lambda kv: kv[1], reverse=True):
