@@ -13,12 +13,15 @@ def index():
 
 @app.route('/search')
 def search():
+    print('got here')
     query = request.args.get('q', None)
     if query is None:
         return redirect(url_for('index'))
     result = graph.get_graph_for_phrase(query)
+    result = (list(result[0]), list(result[1]))
+    result = json.dumps(result)
     print(result)
-    return render_template('query.html', graph=result)
+    return render_template('query.html', phrase=query, graph=result)
 
 if __name__ == "__main__":
     app.run(debug=True)
