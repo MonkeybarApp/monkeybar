@@ -12,15 +12,18 @@
                 <p>Type a phrase and see related words!</p>
                 <form id="form">
                     <input type="text" id="phrase">
-                    <input type="submit">
+                    <input type="button" id="submit" value="Submit">
                 </form>
             </div>
         </div>
         <script type=text/javascript>
             $(function() {
-                $('#form').on('submit', function() {
-                    let phrase = encodeURI($('#phrase').val());
-                    window.location.href = '/query/' + phrase + '/';
+                $('#submit').click(function() {
+                    let text = $('#phrase').val().trim();
+                    if(!text) {
+                        return;
+                    }
+                    window.location.href = '/query/' + text + '/';
                 });
             });
         </script>
