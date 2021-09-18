@@ -1,9 +1,10 @@
 {% extends "base.html" %}
-{% block title %} Monkey - {{ phrase }} {% endblock %}
+{% block title %} Monkeybar - {{ phrase }} {% endblock %}
 
 {% block body%}
-    <div id="wrapper">
+    <div class="container" id="wrapper">
         <div id="content">
+            <h1>Monkeybar Graph</h1>
             <p>The phrase you searched for was "{{ phrase }}".</p>
             <p>Here is a table that shows related words.</p>
             <ol id="list"></ol>
