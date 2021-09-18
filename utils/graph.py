@@ -1,7 +1,7 @@
 from googlesearch import search
 import requests
 from bs4 import BeautifulSoup
-from word import get_wordlist_for_url
+from .word import get_wordlist_for_url
 import copy
 
 class Graph:
@@ -55,10 +55,9 @@ class Graph:
 def get_graph_for_phrase(phrase):
     graph = Graph()
 
-    num_urls = 20
+    num_urls = 10
 
     for url in search(phrase, stop=num_urls):
-        print(url)
         wordlist = get_wordlist_for_url(url)
 
         for i in range(0, len(wordlist)):
@@ -78,7 +77,6 @@ def get_graph_for_phrase(phrase):
 
         node_edges = graph.node_edges(current_node, threshold)
         for i in node_edges:
-            print(i)
             edge_weight = graph.edge_weight(current_node, i) 
             result[current_node][i] = edge_weight
             if i not in result: result[i] = {}

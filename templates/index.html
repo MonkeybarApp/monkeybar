@@ -6,21 +6,10 @@
         <div id="content">
             <h1>Monkeybar Graph</h1>
             <p>Type a phrase and see related words!</p>
-            <div>
-                <input type="text" id="phrase">
-                <input type="button" id="submit" value="Submit">
-            </div>
+            <form method="get" action="/search">
+                <input type="text" id="phrase" name="q">
+                <input type="submit" id="submit" value="Submit">
+            </form>
         </div>
     </div>
-    <script type=text/javascript>
-        $(function() {
-            $('#submit').click(function() {
-                let text = $('#phrase').val().trim();
-                if(!text) {
-                    return;
-                }
-                window.location.href = '/query/' + text + '/';
-            });
-        });
-    </script>
 {% endblock%}

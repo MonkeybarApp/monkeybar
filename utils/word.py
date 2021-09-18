@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 from unidecode import unidecode
 import re
-from data import common_words
+from .data import common_words
 
 banned_str = ["'s", '\n']
 
