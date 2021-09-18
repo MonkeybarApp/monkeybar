@@ -3,6 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 from .word import get_wordlist_for_url
 import copy
+import math
 
 class Graph:
     def __init__(self, nodes={}, connections={}, edges={}):
@@ -30,6 +31,9 @@ class Graph:
 
     def node_edges(self, node, min_weight=0):
         node_hash = self._hash_node(node)
+
+        if node_hash not in self.connections:
+            return []
 
         return [self.nodes[i] for i in self.connections[node_hash] if self.edge_weight(node, self.nodes[i]) > min_weight]
 
@@ -64,10 +68,10 @@ def get_graph_for_phrase(phrase):
             for j in range(i+1, len(wordlist)):
                 graph.connect(wordlist[i], wordlist[j], 1)
 
-    threshold = num_urls // 2
+    threshold = num_urls // 2.2
     queue = phrase.lower().split(' ')
     visited = set()
-    result = {i: {} for i in queue}
+    edges = set()
 
     while len(queue) > 0:
         current_node = queue.pop(0)
@@ -76,12 +80,15 @@ def get_graph_for_phrase(phrase):
         visited.add(current_node)
 
         node_edges = graph.node_edges(current_node, threshold)
+
         for i in node_edges:
             edge_weight = graph.edge_weight(current_node, i) 
-            result[current_node][i] = edge_weight
-            if i not in result: result[i] = {}
-            result[i][current_node] = edge_weight
+
+            a = copy.copy(current_node)
+            b = copy.copy(i)
+            if a > b: a, b = b, a
+            edges.add((a, b, edge_weight))
 
             queue.append(i)
 
-    return result
+    return visited, edges

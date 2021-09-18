@@ -16,7 +16,9 @@ def search():
     query = request.args.get('q', None)
     if query is None:
         return redirect(url_for('index'))
-    return render_template('query.html', graph=graph.get_graph_for_phrase(query))
+    result = graph.get_graph_for_phrase(query)
+    print(result)
+    return render_template('query.html', graph=result)
 
 if __name__ == "__main__":
     app.run(debug=True)
