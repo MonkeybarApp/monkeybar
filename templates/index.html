@@ -1,31 +1,26 @@
-<!doctype html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-        <title>Monkey</title>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    </head>
-    <body>
-        <div id="wrapper">
-            <div id="content">
-                <h1>Monkey Graph</h1>
-                <p>Type a phrase and see related words!</p>
-                <form id="form">
-                    <input type="text" id="phrase">
-                    <input type="button" id="submit" value="Submit">
-                </form>
+{% extends "base.html" %}
+{% block title %} Monkey {% endblock %}
+
+{% block body%}
+    <div id="wrapper">
+        <div id="content">
+            <h1>Monkey Graph</h1>
+            <p>Type a phrase and see related words!</p>
+            <div>
+                <input type="text" id="phrase">
+                <input type="button" id="submit" value="Submit">
             </div>
         </div>
-        <script type=text/javascript>
-            $(function() {
-                $('#submit').click(function() {
-                    let text = $('#phrase').val().trim();
-                    if(!text) {
-                        return;
-                    }
-                    window.location.href = '/query/' + text + '/';
-                });
+    </div>
+    <script type=text/javascript>
+        $(function() {
+            $('#submit').click(function() {
+                let text = $('#phrase').val().trim();
+                if(!text) {
+                    return;
+                }
+                window.location.href = '/query/' + text + '/';
             });
-        </script>
-    </body>
-</html>
+        });
+    </script>
+{% endblock%}

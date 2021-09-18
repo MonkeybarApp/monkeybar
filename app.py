@@ -9,7 +9,6 @@ def index():
 
 @app.route('/query/<phrase>/')
 def query(phrase):
-    print(phrase)
-    return phrase
+    return render_template('query.html', temp_1=phrase)
 
 app.run(debug=True)
