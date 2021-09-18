@@ -1,7 +1,7 @@
-from googlesearch import search
+import wikipedia
 import requests
 from bs4 import BeautifulSoup
-from .word import get_wordlist_for_url
+from .word import get_wordlist_for_article
 import copy
 import math
 
@@ -57,15 +57,13 @@ class Graph:
 def get_graph_for_phrase(phrase):
     graph = Graph()
 
-    num_urls = 10
-
-    for url in search(phrase, stop=num_urls):
-        wordlist = get_wordlist_for_url(url)
+    for article in wikipedia.search(phrase, results=20):
+        wordlist = get_wordlist_for_article(article)
 
         for i in range(0, len(wordlist)):
             for j in range(i+1, min(i+31, len(wordlist))):
                 if wordlist[i] != wordlist[j]:
-                    graph.connect(wordlist[i], wordlist[j], 1/len(wordlist))
+                    graph.connect(wordlist[i], wordlist[j], (j-i)/len(wordlist))
 
     threshold = 0
     queue = phrase.lower().split(' ')
@@ -82,7 +80,7 @@ def get_graph_for_phrase(phrase):
         node_edges.sort(key=lambda x:x[1])
         node_edges.reverse()
 
-        if len(node_edges) > 15:
+        if len(node_edges) > 5:
             node_edges = node_edges[:5]
 
         for i in node_edges:
