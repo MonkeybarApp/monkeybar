@@ -59,10 +59,10 @@
         <div id="content">
             <h1>Monkeybar Graph</h1>
             <p>The phrase you searched for was "{{ phrase }}".</p>
-            <p>Here is a table that shows related words.</p>
+            <p>Here is a graph that shows related words.</p>
         </div>
     </div>
-    <div id="sigma-container"></div>
+    <div id="sigma-container" style="margin-top: 1em;"></div>
     <script type=text/javascript>
         let s = new sigma(
             {
@@ -89,6 +89,15 @@
             edges: []
         }
 
+        function getRandomColor() {
+            var letters = '0123456789ABCDEF';
+            var color = '#';
+            for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
         // nodes
         for(let node of gNodes) {
             graph.nodes.push({
@@ -96,7 +105,8 @@
                 label: node,
                 x: Math.random(),
                 y: Math.random(),
-                size: 3
+                size: 1,
+                color: 'white'
             });
         }
 
@@ -106,8 +116,9 @@
                 id: edge[0] + ':' + edge[1],
                 source: edge[0],
                 target: edge[1],
-                color: '#545454',
-                type: 'line'
+                color: getRandomColor(),
+                type: 'line',
+                size: edge[2] * 4
             });
         }
 
