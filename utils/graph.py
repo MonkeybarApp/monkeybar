@@ -65,7 +65,7 @@ def get_graph_for_phrases(phrases):
 
     # threshold = 0
     # threshold = 0.2
-    threshold = 0.5
+    threshold = 0.4
 
     queue = []
     for phrase in phrases:
