@@ -11,12 +11,18 @@
                 <input type="submit" value="Submit">
             </form>
         </div>
-        <div class="spinner-border" role="status" style="margin-top: 3em; width: 3em; height: 3em; visibility: hidden;"></div>
+        <div class="spinner-border" role="status" style="margin-top: 3em; width: 3em; height: 3em; display: none;"></div>
+        <hr style="margin-top: 2em;">
+        <div style="margin-top: 2em;">
+            <h2>What is Monkeybar?</h2>
+            <p>Monkeybar is a data visualization platform that can gather and graph a collection of relevant keywords for any high-level concept that has a Wikipedia page. It queries text data from the main page as well as a number of related pages to construct an undirected graph based on connections between individual tokens. Then, the graph data is presented to the user with nodes representing tokens and edges representing relatedness of the tokens.</p>
+            <p>For more information, bug reports, or suggestions, please see the <a href="https://github.com/MonkeybarApp/monkeybar">GitHub repository</a>.</p>
+        </div>
     </div>
 
     <script type="text/javascript">
         $('#form').on('submit', function(e) {
-            $('.spinner-border').css('visibility', 'visible');
+            $('.spinner-border').css('display', 'block');
         });
     </script>
 {% endblock%}
