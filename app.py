@@ -24,7 +24,8 @@ def search():
     #open('data.txt', 'w').write(result)
     #result = open('data.txt', 'r').read()
     print(result)
-    return render_template('query.html', phrases=phrases, graph=result)
+    print(phrases)
+    return render_template('query.html', phrase=','.join(phrases), graph=result)
 
 if __name__ == "__main__":
     app.run(debug=True)

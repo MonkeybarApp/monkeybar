@@ -61,6 +61,10 @@
     <div class="container" id="wrapper">
         <div id="content">
             <h1>{{ phrase }}</h1>
+            <form method="get" action="/search" id="form">
+                <input type="text" name="q">
+                <input type="submit" value="Submit">
+            </form>
         </div>
         <div class="spinner-border" role="status" style="margin-top: 3em; width: 3em; height: 3em; display: none;"></div>
     </div>
@@ -128,13 +132,20 @@
 
         s.graph.read(graph);
 
+        // only one redirect allowed
         let clicked = false;
+
+        $('#form').on('submit', function(e) {
+            $('.spinner-border').css('visibility', 'visible');
+            window.location.href = '/search?q=' + $('#query').val();
+        });
+
         s.bind('clickNode doubleClickNode', function(e) {
             if(clicked) return;
             clicked = true;
             console.log('Clicked ' + e.data.node.label);
             $('.spinner-border').css('display', 'block');
-            window.location.href = '/search?q=' + e.data.node.label;
+            window.location.href = '/search?q={{ phrase }},' + e.data.node.label;
         });
 
         s.refresh();
