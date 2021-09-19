@@ -17,12 +17,9 @@ def search():
     query = request.args.get('q', None)
     if query is None:
         return redirect(url_for('index'))
-    #result = graph.get_graph_for_phrase(query)
-    #result = (list(result[0]), list(result[1]))
-    #result = json.dumps(result)
-    #open('test.txt', 'w').write(result)
-    result = open('test.txt', 'r').read()
-    print(result)
+    result = graph.get_graph_for_phrase(query)
+    result = (list(result[0]), list(result[1]))
+    result = json.dumps(result)
     return render_template('query.html', phrase=query, graph=result)
 
 if __name__ == "__main__":
