@@ -60,9 +60,7 @@
 {% block body %}
     <div class="container" id="wrapper">
         <div id="content">
-            <h1>Monkeybar Graph</h1>
-            <p>The phrase you searched for was "{{ phrase }}".</p>
-            <p>Here is a graph that shows related words.</p>
+            <h1>{{ phrase }}</h1>
         </div>
     </div>
     <div id="sigma-container" style="margin-top: 1em;"></div>
@@ -128,7 +126,15 @@
         }
 
         s.graph.read(graph);
+
+        s.bind('clickNode doubleClickNode', function(e) {
+            console.log('Clicked ' + e.data.node.label);
+            window.location.href = '/search?q=' + e.data.node.label;
+        });
+
         s.refresh();
+
+        setTimeout(() => s.stopForceAtlas2(), 10000);
         s.startForceAtlas2({worker: true, barnesHutOptimize: false, slowDown: 1});
     </script>
 
