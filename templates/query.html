@@ -74,8 +74,8 @@
                     labelColor: 'node',
                     minEdgeSize: 0.1,
                     maxEdgeSize: 2,
-                    minNodeSize: 5,
-                    maxNodeSize: 5,
+                    minNodeSize: 1,
+                    maxNodeSize: 40,
                 }
             }
         );
@@ -98,14 +98,16 @@
             return color;
         }
 
+        console.log(gNodes);
+
         // nodes
-        for(let node of gNodes) {
+        for(let node in gNodes) {
             graph.nodes.push({
                 id: node,
                 label: node,
                 x: Math.random(),
                 y: Math.random(),
-                size: 1,
+                size: 4 * gNodes[node],
                 color: 'white'
             });
         }
