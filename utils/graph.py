@@ -54,12 +54,12 @@ def get_graph_for_phrases(phrases):
         for i in range(0, len(wordlist)):
             for j in range(i+1, min(i+31, len(wordlist))):
                 if wordlist[i] != wordlist[j]:
-                    graph.connect(wordlist[i], wordlist[j], (30+i-j)/30)
+                    graph.connect(wordlist[i], wordlist[j], (30+i-j)/len(wordlist))
 
     # threshold = 0
     # threshold = 0.2
-    # threshold = 0.4
-    threshold = 30
+    threshold = 0.4
+    # threshold = 20
 
     queue = []
     for phrase in phrases:
