@@ -56,6 +56,7 @@ class Graph:
     
 def get_graph_for_phrase(phrase):
     graph = Graph()
+    print(graph)
 
     for wordlist in get_wordlists_for_phrase(phrase):
 
@@ -64,7 +65,7 @@ def get_graph_for_phrase(phrase):
                 if wordlist[i] != wordlist[j]:
                     graph.connect(wordlist[i], wordlist[j], (30+i-j)/len(wordlist))
 
-    threshold = 0
+    threshold = 0.5
     queue = phrase.lower().split(' ')
     visited = set()
     nodes = {i: 1 for i in queue}
@@ -80,8 +81,8 @@ def get_graph_for_phrase(phrase):
         node_edges.sort(key=lambda x:x[1])
         node_edges.reverse()
 
-        if len(node_edges) > 5:
-            node_edges = node_edges[:5]
+        # if len(node_edges) > 5:
+        #     node_edges = node_edges[:5]
 
         for i in node_edges:
             if i[0] not in nodes: nodes[i[0]] = 0
