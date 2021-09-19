@@ -62,11 +62,12 @@ def get_graph_for_phrase(phrase):
         for i in range(0, len(wordlist)):
             for j in range(i+1, min(i+31, len(wordlist))):
                 if wordlist[i] != wordlist[j]:
-                    graph.connect(wordlist[i], wordlist[j], (j-i)/len(wordlist))
+                    graph.connect(wordlist[i], wordlist[j], (30+i-j)/len(wordlist))
 
     threshold = 0
     queue = phrase.lower().split(' ')
     visited = set()
+    nodes = {i: 1 for i in queue}
     edges = set()
 
     while len(queue) > 0:
@@ -83,11 +84,15 @@ def get_graph_for_phrase(phrase):
             node_edges = node_edges[:5]
 
         for i in node_edges:
+            if i[0] not in nodes: nodes[i[0]] = 0
+            
             a = copy.copy(current_node)
             b = copy.copy(i[0])
             if a > b: a, b = b, a
             edges.add((a, b, i[1]))
+            nodes[a] += 1
+            nodes[b] += 1
 
             queue.append(i[0])
 
-    return visited, edges
+    return nodes, edges

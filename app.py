@@ -18,6 +18,7 @@ def search():
     if query is None:
         return redirect(url_for('index'))
     result = graph.get_graph_for_phrase(query)
+    print(result)
     result = (list(result[0]), list(result[1]))
     result = json.dumps(result)
     return render_template('query.html', phrase=query, graph=result)

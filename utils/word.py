@@ -40,10 +40,11 @@ def get_wordlist_for_url(url):
 def get_wordlists_for_phrase(phrase):
     wordlists = []
 
-    for url in search(phrase, stop=10):
-        wordlists.append(get_wordlist_for_url(url))
+    # for url in search(phrase, stop=0):
+    #     wordlists.append(get_wordlist_for_url(url))
 
-    for article in wikipedia.search(phrase, results=10):
+    for article in wikipedia.search(phrase, results=15):
+        print(article)
         try:
             wordlists.append(clean_text(wikipedia.page(title=article).content))
         except wikipedia.exceptions.WikipediaException:
