@@ -39,6 +39,9 @@
     <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/misc/sigma.misc.bindEvents.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/misc/sigma.misc.bindDOMEvents.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/src/misc/sigma.misc.drawHovers.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/plugins/sigma.layout.forceAtlas2/worker.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sigma@1.2.1/plugins/sigma.layout.forceAtlas2/supervisor.js"></script>
     <style>
         #sigma-container {
             width: 100%;
@@ -75,7 +78,7 @@
                     minEdgeSize: 0.1,
                     maxEdgeSize: 2,
                     minNodeSize: 1,
-                    maxNodeSize: 40,
+                    maxNodeSize: 30
                 }
             }
         );
@@ -107,7 +110,7 @@
                 label: node,
                 x: Math.random(),
                 y: Math.random(),
-                size: 4 * gNodes[node],
+                size: gNodes[node],
                 color: 'white'
             });
         }
@@ -126,6 +129,7 @@
 
         s.graph.read(graph);
         s.refresh();
+        s.startForceAtlas2({worker: true, barnesHutOptimize: false, slowDown: 1});
     </script>
 
 {% endblock %}

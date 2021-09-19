@@ -17,11 +17,11 @@ def search():
     query = request.args.get('q', None)
     if query is None:
         return redirect(url_for('index'))
-    #result = graph.get_graph_for_phrase(query)
+    result = graph.get_graph_for_phrase(query)
     # result is now a tuple containing node data and an edge list
-    #result = json.dumps((result[0], list(result[1])))
+    result = json.dumps((result[0], list(result[1])))
     #open('data.txt', 'w').write(result)
-    result = open('data.txt', 'r').read()
+    #result = open('data.txt', 'r').read()
     print(result)
     return render_template('query.html', phrase=query, graph=result)
 
