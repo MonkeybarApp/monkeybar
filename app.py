@@ -17,13 +17,14 @@ def search():
     query = request.args.get('q', None)
     if query is None:
         return redirect(url_for('index'))
-    result = graph.get_graph_for_phrase(query)
+    phrases = query.split(',')
+    result = graph.get_graph_for_phrases(phrases)
     # result is now a tuple containing node data and an edge list
     result = json.dumps((result[0], list(result[1])))
     #open('data.txt', 'w').write(result)
     #result = open('data.txt', 'r').read()
     print(result)
-    return render_template('query.html', phrase=query, graph=result)
+    return render_template('query.html', phrases=phrases, graph=result)
 
 if __name__ == "__main__":
     app.run(debug=True)

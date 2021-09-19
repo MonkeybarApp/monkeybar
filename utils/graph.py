@@ -54,19 +54,25 @@ class Graph(object):
         self.connections[node_a_hash].add(node_b_hash)
         self.connections[node_b_hash].add(node_a_hash)
     
-def get_graph_for_phrase(phrase):
+def get_graph_for_phrases(phrases):
     graph = Graph()
-    print(len(graph.nodes))
 
-    for wordlist in get_wordlists_for_phrase(phrase):
+    wordlists = []
+    for phrase in phrases:
+        wordlists.extend(get_wordlists_for_phrase(phrase))
 
+    for wordlist in wordlists:
         for i in range(0, len(wordlist)):
             for j in range(i+1, min(i+31, len(wordlist))):
                 if wordlist[i] != wordlist[j]:
                     graph.connect(wordlist[i], wordlist[j], (30+i-j)/len(wordlist))
 
     threshold = 0.5
-    queue = phrase.lower().split(' ')
+
+    queue = []
+    for phrase in phrases:
+        queue.extend(phrase.lower().split(' '))
+
     visited = set()
     nodes = {i: 1 for i in queue}
     edges = set()
