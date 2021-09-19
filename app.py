@@ -14,9 +14,11 @@ def index():
 def search():
     print('got here')
     query = request.args.get('q', None)
-    if query is None:
+    if not query:
         return redirect(url_for('index'))
-    phrases = query.split(',')
+    phrases = [i for i in query.strip().split(',') if i]
+    if len(phrases) == 0:
+        return redirect(url_for('index'))
     result = graph.get_graph_for_phrases(phrases)
     # result is now a tuple containing node data and an edge list
     result = json.dumps((result[0], list(result[1])))
