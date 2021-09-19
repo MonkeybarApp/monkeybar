@@ -1,7 +1,7 @@
-import wikipedia
+from googlesearch import search
 import requests
 from bs4 import BeautifulSoup
-from .word import get_wordlist_for_article
+from .word import get_wordlists_for_phrase
 import copy
 import math
 
@@ -57,8 +57,7 @@ class Graph:
 def get_graph_for_phrase(phrase):
     graph = Graph()
 
-    for article in wikipedia.search(phrase, results=20):
-        wordlist = get_wordlist_for_article(article)
+    for wordlist in get_wordlists_for_phrase(phrase):
 
         for i in range(0, len(wordlist)):
             for j in range(i+1, min(i+31, len(wordlist))):

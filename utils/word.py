@@ -1,5 +1,6 @@
-import wikipedia
 import requests
+from googlesearch import search
+import wikipedia
 from bs4 import BeautifulSoup
 from unidecode import unidecode
 import re
@@ -17,9 +18,35 @@ def clean_text(content):
     wordlist = [i for i in content.split(' ') if len(i) > 1 and i not in common_words]
     return list(filter(('').__ne__, wordlist))
 
-def get_wordlist_for_article(article_title):
-    print(article_title)
-    try:
-        return clean_text(wikipedia.page(title=article_title).content)
-    except wikipedia.exceptions.PageError:
+def get_wordlist_for_url(url):
+    resp = requests.get(url)
+
+    if resp.status_code != requests.codes.ok:
         return []
+
+    content = ""
+
+    soup = BeautifulSoup(resp.text, 'html.parser')
+    for p_elm in soup.find_all('p'):
+        if len(p_elm.text) > len(p_elm)/2:
+            content += p_elm.text
+
+    if len(content) > 10:
+        return clean_text(content)
+    else:
+        return []
+
+
+def get_wordlists_for_phrase(phrase):
+    wordlists = []
+
+    for url in search(phrase, stop=10):
+        wordlists.append(get_wordlist_for_url(url))
+
+    for article in wikipedia.search(phrase, results=10):
+        try:
+            wordlists.append(clean_text(wikipedia.page(title=article).content))
+        except wikipedia.exceptions.WikipediaException:
+            pass
+
+    return wordlists
