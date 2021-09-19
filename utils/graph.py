@@ -9,48 +9,37 @@ class Graph(object):
         self.connections = {}
         self.edges = {}
 
-    def _hash_node(self, node):
-        node_hash = hash(node)
-        self.nodes[node_hash] = node
-        return node_hash
-
     def _hash_edge(self, a, b):
         if a > b:
             a, b = b, a
-        return hash((a, b))
+        return (a, b)
 
-    def _create_node(self, node_hash):
-        if node_hash not in self.connections:
-            self.connections[node_hash] = set()
+    def _create_node(self, node):
+        if node not in self.connections:
+            self.connections[node] = set()
 
     def _create_edge(self, edge_hash):
         if edge_hash not in self.edges:
             self.edges[edge_hash] = 0
 
     def node_edges(self, node, min_weight=0):
-        node_hash = self._hash_node(node)
-
-        if node_hash not in self.connections:
+        if node not in self.connections:
             return []
 
-        return [(self.nodes[i], self.edge_weight(node, self.nodes[i])) for i in self.connections[node_hash] if self.edge_weight(node, self.nodes[i]) > min_weight]
+        return [(i, self.edge_weight(node, i)) for i in self.connections[node] if self.edge_weight(node, i) > min_weight]
 
     def edge_weight(self, a, b):
         edge_hash = self._hash_edge(a, b)
         return self.edges[edge_hash]
 
     def connect(self, a, b, weight):
-        node_a_hash = self._hash_node(a)
-        node_b_hash = self._hash_node(b)
         edge_hash = self._hash_edge(a, b)
 
         self._create_edge(edge_hash)
         self.edges[edge_hash] += weight
 
-        self._create_node(node_a_hash)
-        self._create_node(node_b_hash)
-        self.connections[node_a_hash].add(node_b_hash)
-        self.connections[node_b_hash].add(node_a_hash)
+        self.connections[a].add(b)
+        self.connections[b].add(a)
     
 def get_graph_for_phrases(phrases):
     graph = Graph()
@@ -58,14 +47,19 @@ def get_graph_for_phrases(phrases):
     wordlists = asyncio.run(get_wordlists_for_phrases(phrases))
 
     for wordlist in wordlists:
+        # wordlist_len = len(wordlist)
+        for i in wordlist:
+            graph._create_node(i)
+
         for i in range(0, len(wordlist)):
             for j in range(i+1, min(i+31, len(wordlist))):
                 if wordlist[i] != wordlist[j]:
-                    graph.connect(wordlist[i], wordlist[j], (30+i-j)/len(wordlist))
+                    graph.connect(wordlist[i], wordlist[j], (30+i-j)/30)
 
     # threshold = 0
     # threshold = 0.2
-    threshold = 0.4
+    # threshold = 0.4
+    threshold = 30
 
     queue = []
     for phrase in phrases:
@@ -95,8 +89,8 @@ def get_graph_for_phrases(phrases):
             b = copy.copy(i[0])
             if a > b: a, b = b, a
             edges.add((a, b, i[1]))
-            nodes[a] += 1
-            nodes[b] += 1
+            nodes[a] += i[1]
+            nodes[b] += i[1]
 
             queue.append(i[0])
 
