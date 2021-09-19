@@ -5,11 +5,11 @@ from .word import get_wordlists_for_phrase
 import copy
 import math
 
-class Graph:
-    def __init__(self, nodes={}, connections={}, edges={}):
-        self.nodes = nodes
-        self.connections = connections
-        self.edges = edges
+class Graph(object):
+    def __init__(self):
+        self.nodes = {}
+        self.connections = {}
+        self.edges = {}
 
     def _hash_node(self, node):
         node_hash = hash(node)
@@ -56,7 +56,7 @@ class Graph:
     
 def get_graph_for_phrase(phrase):
     graph = Graph()
-    print(graph)
+    print(len(graph.nodes))
 
     for wordlist in get_wordlists_for_phrase(phrase):
 
