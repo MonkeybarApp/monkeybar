@@ -1,6 +1,5 @@
 from flask import Flask
 from flask import request, render_template, redirect, url_for
-from bs4 import BeautifulSoup
 import requests
 import json
 from utils import graph
@@ -28,4 +27,4 @@ def search():
     return render_template('query.html', phrase=','.join(phrases), graph=result)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)
