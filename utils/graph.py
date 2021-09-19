@@ -1,7 +1,5 @@
-from googlesearch import search
-import requests
-from bs4 import BeautifulSoup
-from .word import get_wordlists_for_phrase
+import asyncio
+from .word import get_wordlists_for_phrases
 import copy
 import math
 
@@ -57,9 +55,7 @@ class Graph(object):
 def get_graph_for_phrases(phrases):
     graph = Graph()
 
-    wordlists = []
-    for phrase in phrases:
-        wordlists.extend(get_wordlists_for_phrase(phrase))
+    wordlists = asyncio.run(get_wordlists_for_phrases(phrases))
 
     for wordlist in wordlists:
         for i in range(0, len(wordlist)):
@@ -67,6 +63,8 @@ def get_graph_for_phrases(phrases):
                 if wordlist[i] != wordlist[j]:
                     graph.connect(wordlist[i], wordlist[j], (30+i-j)/len(wordlist))
 
+    # threshold = 0
+    # threshold = 0.2
     threshold = 0.5
 
     queue = []
@@ -87,8 +85,8 @@ def get_graph_for_phrases(phrases):
         node_edges.sort(key=lambda x:x[1])
         node_edges.reverse()
 
-        # if len(node_edges) > 5:
-        #     node_edges = node_edges[:5]
+        # if len(node_edges) > 15:
+        #     node_edges = node_edges[:15]
 
         for i in node_edges:
             if i[0] not in nodes: nodes[i[0]] = 0
