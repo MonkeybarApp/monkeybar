@@ -62,9 +62,10 @@
         <div id="content">
             <h1>{{ phrase }}</h1>
         </div>
+        <div class="spinner-border" role="status" style="margin-top: 3em; width: 3em; height: 3em; display: none;"></div>
     </div>
     <div id="sigma-container" style="margin-top: 1em;"></div>
-    <script type=text/javascript>
+    <script type="text/javascript">
         let s = new sigma(
             {
                 renderer: {
@@ -127,8 +128,12 @@
 
         s.graph.read(graph);
 
+        let clicked = false;
         s.bind('clickNode doubleClickNode', function(e) {
+            if(clicked) return;
+            clicked = true;
             console.log('Clicked ' + e.data.node.label);
+            $('.spinner-border').css('display', 'block');
             window.location.href = '/search?q=' + e.data.node.label;
         });
 
